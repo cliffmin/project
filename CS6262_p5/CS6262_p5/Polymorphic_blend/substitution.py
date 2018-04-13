@@ -15,6 +15,9 @@ def substitute(attack_payload, substitution_table):
     attack_payload = list(attack_payload)
 
     # Based on your implementattion of substitution table, please prepare result and xor_table as output
+    # for m in range(attack_payload):
+
+
     for k, v in substitution_table.items():
         curr_iter = 0
         for i in range(len(attack_payload)):
@@ -57,7 +60,7 @@ def getSubstitutionTable(artificial_payload, attack_payload):
     # Your code here ...
     substitution_table = {}
     for i in range(len(sorted_artificial_frequency)):
-        att = sorted_attack_frequency[i % len(sorted_attack_frequency)]
+        att = sorted_attack_frequency[i if i < len(sorted_attack_frequency) else 0]
         att_key = att[0]
         att_freq = att[1]
         reg = sorted_artificial_frequency[i]
@@ -73,8 +76,7 @@ def getSubstitutionTable(artificial_payload, attack_payload):
 
     # You may implement substitution table in your way. Just make sure it can be used in
     # substitute(attack_payload, substitution_table)
-    import json
-    # print(json.dumps(substitution_table, indent=2))
+
     return substitution_table
 
 
