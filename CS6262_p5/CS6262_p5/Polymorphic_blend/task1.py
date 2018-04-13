@@ -12,32 +12,50 @@ def get_next_mod_4(xor_table):
     m = len(xor_table) % 4
     return len(xor_table) + (4 - m)
 
+
+def print_sub_table(sub_table):
+    import json
+    for k, v in sub_table.items():
+        sub_table[k] = len(v)
+    print(json.dumps(substitution_table, indent=2))
+
+
 def compare_freq(artificial_payload, attack_payload):
     artificial_frequency = frequency(artificial_payload)
-    attack_frequency = frequency(raw_payload)
+    attack_frequency = frequency(attack_payload)
     sorted_artificial_frequency = sorting(artificial_frequency)
     sorted_attack_frequency = sorting(attack_frequency)
-
     no_match = []
-    for k, v in attack_frequency.items():
-        for k1, v1 in artificial_frequency.items():
-            # if k1 == k and v1 != v and (k, v1, v) not in no_match:
-            if k1 == k:
-                no_match.append((k, v, v1))
-            # elif k not in attack_frequency and (k, v) not in no_match:
-            #     no_match.append((k, v))
-            #     continue
-            # elif k1 not in artificial_frequency and (k1, v1) not in no_match:
-            #     no_match.append((k1, v1))
-            #     continue
-    print('Char | att freq | art freq')
-    for x in no_match:
-        print(x)
+    match = []
+    for k in attack_payload:
+        if k in artificial_frequency:
+            m = attack_frequency[k]
+            n = artificial_frequency[k]
+            d = (abs(m - n) / m) * 100
+            d = round(d, 3)
+            rec = (k, 'm:' + str(m), 'n:' + str(n), '%diff:' + str(d))
+            if m != n and rec not in match:
+                match.append(rec)
+        else:
+            no_match.append(k)
+    print('---------Frequency Difference------------')
+    for i in match:
+        print(i)
+    for i in no_match:
+        print('nope', i)
+    print('-------End Frequency Difference----------')
+
 
 def check_if_valid_char(artifical_payload, raw_payload):
-    for i in raw_payload:
-        if str(i) not in artificial_payload:
+    for i in list(artifical_payload):
+        if str(i) not in list(raw_payload):
             print('fuck', i)
+
+def get_size(filename):
+    import os
+
+    st = os.stat(filename)
+    return str(st.st_size)
 
 if __name__ == '__main__':
     # Read in source pcap file and extract tcp payload
@@ -49,16 +67,16 @@ if __name__ == '__main__':
 
     # Substitution table will be used to encrypt attack body and generate corresponding xor_table which will be used to decrypt the attack body
     (xor_table, adjusted_attack_body) = substitute(attack_payload, substitution_table)
-
+    # compare_freq(artificial_payload, adjusted_attack_body)
     # For xor operation, should be a multiple of 4
     # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
     l = max(get_next_mod_4(xor_table), get_next_mod_4(adjusted_attack_body))
-    while len(xor_table) < 128 or len(xor_table) < l:
+    while len(xor_table) < l:
         xor_table.append(chr(0))
 
     # For xor operation, should be a multiple of 4
     # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
-    while len(adjusted_attack_body) < 128 or len(adjusted_attack_body) < l:
+    while len(adjusted_attack_body) < l:
         adjusted_attack_body.append(chr(0))
 
     # Read in decryptor binary to append at the start of payload
@@ -69,7 +87,7 @@ if __name__ == '__main__':
     b_list = []
     for b in shellcode_content:
         b_list.append(b)
-
+    # adjusted_attack_body = ''.join(adjusted_attack_body)
     # Raw payload will be constructed by encrypted attack body and xor_table
     raw_payload = b_list + adjusted_attack_body + xor_table
     # raw_payload = adjusted_attack_body
@@ -77,7 +95,8 @@ if __name__ == '__main__':
         padding(artificial_payload, raw_payload)
 
     compare_freq(artificial_payload, raw_payload)
-    check_if_valid_char(artificial_payload, raw_payload)
+    # print_sub_table(substitution_table)
+    print(len(''.join(raw_payload)), len(''.join(artificial_payload)))
     # Write prepared payload to Output file and test against your PAYL model
     open('output', 'w')
     with open("output", "w") as result_file:
