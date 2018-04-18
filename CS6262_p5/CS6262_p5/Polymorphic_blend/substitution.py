@@ -74,9 +74,9 @@ def getSubstitutionTable(artificial_payload, attack_payload):
         if i >= len(sorted_attack_frequency) - 1:
             sorted_attack_frequency = sorted(sorted_attack_frequency, key=lambda x: x[1], reverse=True)
 
+
     # You may implement substitution table in your way. Just make sure it can be used in
     # substitute(attack_payload, substitution_table)
-
     return substitution_table
 
 

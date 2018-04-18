@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # adjusted_attack_body = ''.join(adjusted_attack_body)
     # Raw payload will be constructed by encrypted attack body and xor_table
     raw_payload = b_list + adjusted_attack_body + xor_table
-    # raw_payload = adjusted_attack_body
+
     while len(raw_payload) < len(artificial_payload):
         padding(artificial_payload, raw_payload)
 
@@ -102,3 +102,6 @@ if __name__ == '__main__':
     with open("output", "w") as result_file:
         result_file.write(''.join(raw_payload))
 
+    open('payload.bin', 'w')
+    with open('payload.bin', 'wb') as payload_file:
+        payload_file.write(''.join(adjusted_attack_body + xor_table))

@@ -18,6 +18,7 @@ def padding(artificial_payload, raw_payload):
     sorted_artifical_frequency = sorting(artificial_frequency)
     sorted_raw_payload_frequency = sorting(raw_payload_frequency)
 
+    # Your code here ...
     diffs = []
     nope = []
 
@@ -32,45 +33,5 @@ def padding(artificial_payload, raw_payload):
     if diffs:
         max_diff = sorted(diffs)[0]
         raw_payload.append(max_diff[0])
-    # elif nope:
-    #     raw_payload.append(nope[0])
-    # else:
-    #     raw_payload.append(artificial_payload[0])
-
-    return
-
-    for k in artificial_payload:
-        # if type(k) == int:
-        # j = chr(k)
-        # if len(artificial_payload) > len(raw_payload):
-        #     raw_payload.append(k)
-        #     raw_payload_frequency = frequency(raw_payload)
-        if k in raw_payload:
-            # while artificial_frequency[k] != raw_payload_frequency[k]:
-            #     if artificial_frequency[k] > raw_payload_frequency[k]:
-            #         raw_payload.append(k)
-            #         raw_payload_frequency = frequency(raw_payload)
-            #     if artificial_frequency[k] < raw_payload_frequency[k]:
-            #         raw_payload.remove(k)
-            #         raw_payload_frequency = frequency(raw_payload)
-            # c = copy.copy(raw_payload)
-            # c.append(k)
-            # cf = frequency(c)
-            # if artificial_frequency[k] < cf[k]:
-            #     continue
-            while artificial_frequency[k] > raw_payload_frequency[k] and len(artificial_payload) > len(raw_payload):
-                raw_payload.append(k)
-                raw_payload_frequency = frequency(raw_payload)
-        else:
-            if len(artificial_payload) > len(raw_payload):
-                raw_payload.append(k)
-                raw_payload_frequency = frequency(raw_payload)
-                while artificial_frequency[k] > raw_payload_frequency[k] and len(artificial_payload) > len(raw_payload):
-                    raw_payload.append(k)
-                    raw_payload_frequency = frequency(raw_payload)
 
 
-
-
-
-# Your code here ...
