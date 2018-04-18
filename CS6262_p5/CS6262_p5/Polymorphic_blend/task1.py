@@ -97,8 +97,8 @@ if __name__ == '__main__':
     with open("output", "w") as result_file:
         result_file.write(''.join(raw_payload))
 
-    open('table.txt', 'w')
-    with open("table.txt", "w") as result_file:
+    open('substitution table.txt', 'w')
+    with open("substitution table.txt", "w") as result_file:
         result_file.write(str(substitution_table))
 
     open('payload.bin', 'w')
