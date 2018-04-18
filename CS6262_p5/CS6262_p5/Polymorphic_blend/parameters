@@ -1,0 +1,5 @@
+|Protocol:HTTP|
+|Threshold:900|
+|SmoothingFactor:0.1|
+|TruePositiveRate:99.45|
+|Distance:2300|

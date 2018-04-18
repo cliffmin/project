@@ -17,7 +17,6 @@ def substitute(attack_payload, substitution_table):
     # Based on your implementattion of substitution table, please prepare result and xor_table as output
     # for m in range(attack_payload):
 
-
     for k, v in substitution_table.items():
         curr_iter = 0
         for i in range(len(attack_payload)):
@@ -26,7 +25,6 @@ def substitute(attack_payload, substitution_table):
                 curr_iter += 1
 
     xor_table, attack_payload = create_xor_table(substitution_table, attack_payload)
-    # b_attack_payload = bytearray(attack_payload)
 
     return xor_table, attack_payload
 
@@ -39,7 +37,7 @@ def create_xor_table(substitution_table, attack_payload):
     xor_table = []
     for m in attack_payload:
         xor_table.append(ord(m[0]) ^ ord(xor_dict[m[0]]))
-    # attack_payload = [ord(m[0]) for m in attack_payload]
+
     attack_payload = [m[0] for m in attack_payload]
     xor_table = [chr(i) for i in xor_table]
     return xor_table, attack_payload

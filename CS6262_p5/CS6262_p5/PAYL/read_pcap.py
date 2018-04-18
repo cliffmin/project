@@ -3,31 +3,22 @@ import dpkt
 
 def readPcap(fileName, port_neutral="False"):
     payload_list = []
-    f = open(fileName, "rb")
+    f = open(fileName, "r")
     pcap = dpkt.pcap.Reader(f)
-    ports = {}
     for ts, buf in pcap:
         try:
             eth = dpkt.ethernet.Ethernet(buf)
             ip = eth.data
             tcp = ip.data
             # Read http payload
-            sdport = (tcp.sport, tcp.dport)
-            if sdport not in ports:
-                ports[sdport] = 1
-            else:
-                ports[sdport] += 1
-            if tcp.sport == 80 or tcp.dport == 80:  # TASK: Which port ?
-            # if tcp.sport == 80 and tcp.dport == 3334 or tcp.sport == 3334 and tcp.dport == 80:  # TASK: Which port ?
+            if (tcp.sport == 80 or tcp.dport == 80):  # TASK: Which port ?
                 payload = tcp.data
                 payload_list.append(str(payload))
-            elif port_neutral == "True":
+            elif (port_neutral == "True"):
                 payload = tcp.data
                 payload_list.append(str(payload))
         except:
             continue
-    # for k, v in ports.items():
-    #     print('{}: {}'.format(k, v))
     return payload_list
 
 
